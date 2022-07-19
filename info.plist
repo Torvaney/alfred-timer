@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>bundleid</key>
-	<string>com.torvaney.timer</string>
+	<string>io.github.torvaney.alfred-timer</string>
 	<key>category</key>
 	<string>Tools</string>
 	<key>connections</key>
@@ -12,54 +12,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>7F26EA20-FECE-4687-88F3-1BB5490CB83D</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>7F26EA20-FECE-4687-88F3-1BB5490CB83D</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>8B69080E-5092-48F4-8BED-FBC9E73F2FDF</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>sourceoutputuid</key>
-				<string>C876D15F-F50D-4681-B2C4-6C800F7E5FF6</string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
 				<string>A62FEB92-4492-4818-A964-FD5C28F3E40D</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>sourceoutputuid</key>
-				<string>C876D15F-F50D-4681-B2C4-6C800F7E5FF6</string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
-				<string>AFD1AA6C-9EFD-4166-8DF1-4867578F3DBE</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
-				<string>B5A855D9-607E-4C36-924F-E40D08731C3B</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -73,6 +26,29 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>217038E5-6124-4AFC-9645-9B9A98EDCB35</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>9D3CC3F7-797D-42BA-AFB7-04F5FD329DDD</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>AFD1AA6C-9EFD-4166-8DF1-4867578F3DBE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>B5A855D9-607E-4C36-924F-E40D08731C3B</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -97,21 +73,6 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>soundname</key>
-				<string>Bottle</string>
-				<key>systemsound</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.playsound</string>
-			<key>uid</key>
-			<string>8B69080E-5092-48F4-8BED-FBC9E73F2FDF</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>lastpathcomponent</key>
 				<false/>
 				<key>onlyshowifquerypopulated</key>
@@ -119,9 +80,9 @@
 				<key>removeextension</key>
 				<false/>
 				<key>text</key>
-				<string>Could not parse input string</string>
+				<string></string>
 				<key>title</key>
-				<string>🚨 Invalid timer! 🚨</string>
+				<string></string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.notification</string>
@@ -177,36 +138,6 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>conditions</key>
-				<array>
-					<dict>
-						<key>inputstring</key>
-						<string>{query}</string>
-						<key>matchcasesensitive</key>
-						<true/>
-						<key>matchmode</key>
-						<integer>0</integer>
-						<key>matchstring</key>
-						<string></string>
-						<key>outputlabel</key>
-						<string>Could not parse "{query}"!</string>
-						<key>uid</key>
-						<string>C876D15F-F50D-4681-B2C4-6C800F7E5FF6</string>
-					</dict>
-				</array>
-				<key>elselabel</key>
-				<string>{query}</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.utility.conditional</string>
-			<key>uid</key>
-			<string>7F26EA20-FECE-4687-88F3-1BB5490CB83D</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>lastpathcomponent</key>
 				<false/>
 				<key>onlyshowifquerypopulated</key>
@@ -222,6 +153,19 @@
 			<string>alfred.workflow.output.notification</string>
 			<key>uid</key>
 			<string>AFD1AA6C-9EFD-4166-8DF1-4867578F3DBE</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>timer-notification</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>9D3CC3F7-797D-42BA-AFB7-04F5FD329DDD</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -248,57 +192,50 @@
 		<key>217038E5-6124-4AFC-9645-9B9A98EDCB35</key>
 		<dict>
 			<key>xpos</key>
-			<integer>225</integer>
+			<integer>210</integer>
 			<key>ypos</key>
-			<integer>195</integer>
-		</dict>
-		<key>7F26EA20-FECE-4687-88F3-1BB5490CB83D</key>
-		<dict>
-			<key>xpos</key>
-			<integer>375</integer>
-			<key>ypos</key>
-			<integer>215</integer>
+			<integer>80</integer>
 		</dict>
 		<key>817263BA-67CD-401C-8716-B1201D860E89</key>
 		<dict>
 			<key>xpos</key>
-			<integer>60</integer>
+			<integer>40</integer>
 			<key>ypos</key>
-			<integer>195</integer>
+			<integer>80</integer>
 		</dict>
-		<key>8B69080E-5092-48F4-8BED-FBC9E73F2FDF</key>
+		<key>9D3CC3F7-797D-42BA-AFB7-04F5FD329DDD</key>
 		<dict>
 			<key>xpos</key>
-			<integer>655</integer>
+			<integer>210</integer>
 			<key>ypos</key>
-			<integer>25</integer>
+			<integer>270</integer>
 		</dict>
 		<key>A62FEB92-4492-4818-A964-FD5C28F3E40D</key>
 		<dict>
 			<key>xpos</key>
-			<integer>655</integer>
+			<integer>385</integer>
 			<key>ypos</key>
-			<integer>130</integer>
+			<integer>80</integer>
 		</dict>
 		<key>AFD1AA6C-9EFD-4166-8DF1-4867578F3DBE</key>
 		<dict>
 			<key>xpos</key>
-			<integer>655</integer>
+			<integer>500</integer>
 			<key>ypos</key>
-			<integer>275</integer>
+			<integer>230</integer>
 		</dict>
 		<key>B5A855D9-607E-4C36-924F-E40D08731C3B</key>
 		<dict>
 			<key>xpos</key>
-			<integer>660</integer>
+			<integer>500</integer>
 			<key>ypos</key>
-			<integer>390</integer>
+			<integer>355</integer>
 		</dict>
 	</dict>
 	<key>variablesdontexport</key>
 	<array/>
 	<key>version</key>
-	<string>0.0.0.1</string>
+	<string>0.0.1.0</string>
 	<key>webaddress</key>
 	<string>https://github.com/Torvaney/alfred-timer</string>
 </dict>

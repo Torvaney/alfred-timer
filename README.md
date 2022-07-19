@@ -1,6 +1,8 @@
 # An Alfred Timer
 
-A simple timer app for [Alfred](https://www.alfredapp.com/).
+A simple timer app for [Alfred](https://www.alfredapp.com/) using Python and launchd.
+
+Setting a timer adds a one-time job to launchd (MacOS's [system service management daemon](https://en.wikipedia.org/wiki/Launchd)), so unlike some other Alfred timers, it won't create a new process for each timer.
 
 
 ## Screenshots
