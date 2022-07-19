@@ -9,12 +9,20 @@ jobs:
       - uses: actions/checkout@v3
       - name: Build workflow
         run: make all
+      - name: Get version number
+        id: workflow-version
+        run: >-
+          echo "::set-output name=WORKFLOW_VERSION::$(
+            awk '/version/{getline; print}' info.plist |
+            awk '/string/' |
+            sed 's/[^0-9.]*//g'
+          )"
       - name: Create release
         uses: actions/create-release@v1
         with:
           draft: false
           prerelease: false
-          release_name: Release ${{ github.ref }}
-          tag_name: ${{ github.ref }}
+          release_name: Release ${{ steps.workflow-version.outputs.WORKFLOW_VERSION }}
+          tag_name: ${{ steps.workflow-version.outputs.WORKFLOW_VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
