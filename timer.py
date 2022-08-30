@@ -91,10 +91,9 @@ def create_plist(timer, title):
     """
 
     timer_id = uuid.uuid4()
-    label = f'io.github.torvaney.alfred-timer.{title}.{timer_id}'
+    label = f'io.github.torvaney.alfred-timer.{timer_id}'
     filepath = plist_filepath(label)
-
-    title_cleaned = title if title != 'timer' else ''
+    title_cleaned = title or ''
 
     # See `man launchd.plist` for details
     plist = {
@@ -106,7 +105,7 @@ def create_plist(timer, title):
             # * Unloads and removes job from launchd, deletes plist
             '/bin/zsh',
             'notify.sh',
-            title_cleaned ,
+            title_cleaned,
             label,
             str(filepath),
         ],
@@ -126,9 +125,9 @@ def launchctl(subcommand, *args):
 if __name__ == "__main__":
     # Parse arguments
     if len(sys.argv) > 2:
-        title = '"' + ' '.join(sys.argv[2:]).capitalize() + '"'
+        title = ' '.join(sys.argv[2:]).capitalize()
     else:
-        title = 'timer'
+        title = None
 
     query = sys.argv[1]
     timer = parse_query(query)
@@ -138,7 +137,8 @@ if __name__ == "__main__":
         plist_path = create_plist(timer, title)
         launchctl('load', plist_path)
 
-        print(f'Successfully set {title} for {timer}', file=sys.stdout)
+        title_fmt = f'"{title}"' if title else 'a timer'
+        print(f'Successfully set {title_fmt} for {timer}', file=sys.stdout)
         sys.exit(0)
 
     print(f'Failed to set {title}!', file=sys.stdout)
