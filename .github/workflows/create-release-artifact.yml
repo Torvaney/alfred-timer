@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   create-release-artifact:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
       - name: Build Alfred workflow
@@ -17,6 +17,14 @@ jobs:
             awk '/string/' |
             sed 's/[^0-9.]*//g'
           )"
+      - name: Check version is new
+        run: |
+          if gh release view "${{ steps.workflow-version.outputs.WORKFLOW_VERSION }}" > /dev/null 2>&1; then
+            echo "::error::Release ${{ steps.workflow-version.outputs.WORKFLOW_VERSION }} already exists. Bump the version (e.g. make bump-patch) before pushing."
+            exit 1
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create release
         id: create-release
         uses: actions/create-release@v1

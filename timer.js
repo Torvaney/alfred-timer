@@ -2,7 +2,8 @@
 //
 // Each timer is a one-off launchd job. Its plist lives in the workflow's data
 // folder and doubles as the timer's state (title, duration and end time). A
-// single login agent restores any timers that were pending at logout.
+// single login agent restores any timers that were pending at logout, and an
+// optional helper (menubar.swift) shows a countdown in the menu bar.
 //
 // Usage: osascript -l JavaScript timer.js <command> [query]
 //
@@ -20,6 +21,7 @@ ObjC.import('unistd')
 
 const BUNDLE_ID = 'io.github.torvaney.alfred-timer'
 const RESTORE_LABEL = `${BUNDLE_ID}.restore`
+const MENUBAR_LABEL = `${BUNDLE_ID}.menubar`
 
 const fileManager = $.NSFileManager.defaultManager
 
@@ -91,15 +93,6 @@ function dataDir() {
 
 function timersDir() {
   return `${dataDir()}/timers`
-}
-
-function readFile(path) {
-  const contents = $.NSString.stringWithContentsOfFileEncodingError(path, $.NSUTF8StringEncoding, null)
-  return contents.isNil() ? undefined : contents.js
-}
-
-function writeFile(path, contents) {
-  $(contents).writeToFileAtomicallyEncodingError(path, true, $.NSUTF8StringEncoding, null)
 }
 
 function removeFile(path) {
@@ -213,15 +206,44 @@ function unloadJob(id) {
   launchctl('bootout', `${domain()}/${jobLabel(id)}`)
 }
 
-function installScript() {
-  // launchd runs a copy of this script from the data folder, since the workflow
-  // itself may be in a folder that launchd jobs can't read (e.g. ~/Documents)
+function workflowDir() {
   const [, , , script] = $.NSProcessInfo.processInfo.arguments.js.map(arg => arg.js)
-  const source = readFile(script.startsWith('/') ? script : `${fileManager.currentDirectoryPath.js}/${script}`)
-  const target = `${dataDir()}/timer.js`
-  if (readFile(target) !== source) {
-    writeFile(target, source)
+  const path = script.startsWith('/') ? script : `${fileManager.currentDirectoryPath.js}/${script}`
+  return $(path).stringByDeletingLastPathComponent.js
+}
+
+function installFile(name) {
+  // launchd runs copies of the workflow's files from the data folder, since the
+  // workflow itself may be in a folder that launchd jobs can't read (e.g. ~/Documents)
+  const source = `${workflowDir()}/${name}`
+  const target = `${dataDir()}/${name}`
+  if (!fileManager.fileExistsAtPath(source)) {
+    removeFile(target)
+  } else if (!fileManager.contentsEqualAtPathAndPath(source, target)) {
+    removeFile(target)
+    fileManager.copyItemAtPathToPathError(source, target, null)
   }
+}
+
+function startMenuBar() {
+  // The menu bar helper is optional, so do nothing if it wasn't built
+  const program = `${dataDir()}/menubar`
+  if (!fileManager.isExecutableFileAtPath(program)) {
+    return
+  }
+
+  const path = `${dataDir()}/menubar.plist`
+  writePlist(path, {
+    Label: MENUBAR_LABEL,
+    ProgramArguments: [program],
+    EnvironmentVariables: { alfred_workflow_data: dataDir() },
+    ProcessType: 'Interactive',
+  })
+
+  // Bootstrap fails harmlessly if the job is already loaded, and kickstart
+  // does nothing if the helper is already running
+  launchctl('bootstrap', domain(), path)
+  launchctl('kickstart', `${domain()}/${MENUBAR_LABEL}`)
 }
 
 function installRestoreAgent() {
@@ -307,7 +329,8 @@ function create() {
   }
 
   makeDir(timersDir())
-  installScript()
+  installFile('timer.js')
+  installFile('menubar')
   installRestoreAgent()
 
   const name = timer.title ? `"${timer.title}"` : 'a timer'
@@ -315,6 +338,7 @@ function create() {
     removeFile(jobPath(timer.id))
     return `Failed to set ${name}!`
   }
+  startMenuBar()
   return `Set ${name} for ${formatDuration(seconds)}`
 }
 
@@ -346,6 +370,10 @@ function restore() {
       notify(`${describe(timer)} (finished at ${formatClock(timer.end)})`)
       removeFile(jobPath(timer.id))
     }
+  }
+
+  if (activeTimers().length) {
+    startMenuBar()
   }
 }
 
