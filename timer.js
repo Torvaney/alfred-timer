@@ -221,9 +221,22 @@ function installFile(name) {
   }
 }
 
+function installRestoreScript() {
+  // Login Items lists the agent under its program's name, so run this rather
+  // than osascript directly
+  const path = `${dataDir()}/Alfred Timer`
+  const contents = '#!/bin/zsh -f\n# Restores pending timers at login (see timer.js)\nexec /usr/bin/osascript -l JavaScript "${0:A:h}/timer.js" restore\n'
+  const existing = $.NSString.stringWithContentsOfFileEncodingError(path, $.NSUTF8StringEncoding, null)
+  if (existing.isNil() || existing.js !== contents) {
+    $(contents).writeToFileAtomicallyEncodingError(path, true, $.NSUTF8StringEncoding, null)
+    fileManager.setAttributesOfItemAtPathError($({ NSFilePosixPermissions: 0o755 }), path, null)
+  }
+  return path
+}
+
 function installRestoreAgent() {
   const path = `${$.NSHomeDirectory().js}/Library/LaunchAgents/${RESTORE_LABEL}.plist`
-  const programArguments = ['/usr/bin/osascript', '-l', 'JavaScript', `${dataDir()}/timer.js`, 'restore']
+  const programArguments = [installRestoreScript()]
 
   // Only write when changed, as macOS notifies the user about new login items
   const existing = readPlist(path)
