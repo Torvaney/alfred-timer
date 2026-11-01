@@ -56,9 +56,7 @@ A duration is one or more numbers with units, with or without spaces:
 
 Timers survive logging out or restarting: they are restored at login, and any that finished in the meantime are notified then.
 
-While any timers are running, the next one to finish counts down in the menu bar. Click it to see all timers, or to cancel one. The menu bar helper only displays timers, so they still go off if it's hidden or not running.
-
 
 ## Development
 
-`make test` runs the tests for parsing and formatting, and `make` builds `Timer.alfredworkflow`. Building the menu bar helper (`menubar.swift`) needs `swiftc`, from the Xcode Command Line Tools.
+`make test` runs the tests for parsing and formatting, and `make` builds `Timer.alfredworkflow`.

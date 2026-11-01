@@ -1,11 +1,8 @@
 .PHONY: all
 all: Timer.alfredworkflow
 
-Timer.alfredworkflow: timer.js menubar info.plist icon.png
+Timer.alfredworkflow: timer.js info.plist icon.png
 	rm -f $@ && zip $@ $^
-
-menubar: menubar.swift
-	swiftc -O -o $@ $<
 
 .PHONY: test
 test:
@@ -13,7 +10,7 @@ test:
 
 .PHONY: clean
 clean:
-	rm -f Timer.alfredworkflow menubar
+	rm -f Timer.alfredworkflow
 
 # Bump the workflow's version (major.minor.patch) in info.plist
 .PHONY: bump-major bump-minor bump-patch

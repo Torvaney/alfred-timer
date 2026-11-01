@@ -2,8 +2,7 @@
 //
 // Each timer is a one-off launchd job. Its plist lives in the workflow's data
 // folder and doubles as the timer's state (title, duration and end time). A
-// single login agent restores any timers that were pending at logout, and an
-// optional helper (menubar.swift) shows a countdown in the menu bar.
+// single login agent restores any timers that were pending at logout.
 //
 // Usage: osascript -l JavaScript timer.js <command> [query]
 //
@@ -21,7 +20,6 @@ ObjC.import('unistd')
 
 const BUNDLE_ID = 'io.github.torvaney.alfred-timer'
 const RESTORE_LABEL = `${BUNDLE_ID}.restore`
-const MENUBAR_LABEL = `${BUNDLE_ID}.menubar`
 
 const fileManager = $.NSFileManager.defaultManager
 
@@ -217,33 +215,10 @@ function installFile(name) {
   // workflow itself may be in a folder that launchd jobs can't read (e.g. ~/Documents)
   const source = `${workflowDir()}/${name}`
   const target = `${dataDir()}/${name}`
-  if (!fileManager.fileExistsAtPath(source)) {
-    removeFile(target)
-  } else if (!fileManager.contentsEqualAtPathAndPath(source, target)) {
+  if (!fileManager.contentsEqualAtPathAndPath(source, target)) {
     removeFile(target)
     fileManager.copyItemAtPathToPathError(source, target, null)
   }
-}
-
-function startMenuBar() {
-  // The menu bar helper is optional, so do nothing if it wasn't built
-  const program = `${dataDir()}/menubar`
-  if (!fileManager.isExecutableFileAtPath(program)) {
-    return
-  }
-
-  const path = `${dataDir()}/menubar.plist`
-  writePlist(path, {
-    Label: MENUBAR_LABEL,
-    ProgramArguments: [program],
-    EnvironmentVariables: { alfred_workflow_data: dataDir() },
-    ProcessType: 'Interactive',
-  })
-
-  // Bootstrap fails harmlessly if the job is already loaded, and kickstart
-  // does nothing if the helper is already running
-  launchctl('bootstrap', domain(), path)
-  launchctl('kickstart', `${domain()}/${MENUBAR_LABEL}`)
 }
 
 function installRestoreAgent() {
@@ -330,7 +305,6 @@ function create() {
 
   makeDir(timersDir())
   installFile('timer.js')
-  installFile('menubar')
   installRestoreAgent()
 
   const name = timer.title ? `"${timer.title}"` : 'a timer'
@@ -338,7 +312,6 @@ function create() {
     removeFile(jobPath(timer.id))
     return `Failed to set ${name}!`
   }
-  startMenuBar()
   return `Set ${name} for ${formatDuration(seconds)}`
 }
 
@@ -370,10 +343,6 @@ function restore() {
       notify(`${describe(timer)} (finished at ${formatClock(timer.end)})`)
       removeFile(jobPath(timer.id))
     }
-  }
-
-  if (activeTimers().length) {
-    startMenuBar()
   }
 }
 
