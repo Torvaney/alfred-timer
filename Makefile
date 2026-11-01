@@ -1,8 +1,12 @@
 .PHONY: all
 all: Timer.alfredworkflow
 
-Timer.alfredworkflow: timer.py notify.sh info.plist icon.png
-	zip Timer.alfredworkflow timer.py notify.sh info.plist icon.png
+Timer.alfredworkflow: timer.js info.plist icon.png
+	rm -f $@ && zip $@ $^
+
+.PHONY: test
+test:
+	osascript -l JavaScript test.js
 
 .PHONY: clean
 clean:

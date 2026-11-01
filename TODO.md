@@ -6,8 +6,6 @@
 ## Might do
 
 * Keep sending notification/sounding noise until interrupted
-* Allow spaces between number and time unit
-* View and/or stop currently running timers
 * Re-run previous timer
 
 (The thing is, I've never actually needed to use these features, so maybe they're unnecessary)

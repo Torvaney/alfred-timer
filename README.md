@@ -1,6 +1,6 @@
 # An Alfred Timer
 
-A simple timer app for [Alfred](https://www.alfredapp.com/) using Python and launchd.
+A simple timer app for [Alfred](https://www.alfredapp.com/) using launchd.
 
 Setting a timer adds a one-time job to launchd (MacOS's [system service management daemon](https://en.wikipedia.org/wiki/Launchd)), so unlike some other Alfred timers, it won't create a new process for each timer.
 
@@ -35,21 +35,28 @@ Setting a timer adds a one-time job to launchd (MacOS's [system service manageme
 
 ## Requirements
 
-Requires Python 3.6+
-
-(If anyone actually wants to use this for themselves _and_ wants it to run on an earlier version of Python - file an issue and I'd be happy to make it backwards compatible.)
+None beyond macOS and Alfred: the workflow is written in JavaScript for Automation, which ships with macOS.
 
 
-## Notes
+## Usage
 
-The timer command accepts a variety of different ways to specify a time unit:
+`timer <duration> [title]` sets a timer, e.g. `timer 10s`, `timer 5m tea` or `timer 1h30m bake bread`.
 
-* Seconds: 's', 'sec', 'secs', 'seconds'
-* Minutes: 'm', 'min', 'mins', 'minutes'
-* Hours: 'h', 'hour', 'hours'
+`timer` on its own lists active timers. Select one to cancel it. (Active timers are also listed below the "Set a timer" result while you type.)
 
-Although (currently), you mustn't leave a gap between the number and the unit:
+A duration is one or more numbers with units, with or without spaces:
 
-✅ - "20s", "5minutes", "30mins", "2hours"
+* Seconds: 's', 'sec', 'secs', 'second', 'seconds'
+* Minutes: 'm', 'min', 'mins', 'minute', 'minutes'
+* Hours: 'h', 'hr', 'hrs', 'hour', 'hours'
 
-❌ - "20 s", "5 mins"
+✅ - "20s", "5 mins", "3m30s", "1.5h", "2 Hours"
+
+❌ - "20" (no unit), "0s"
+
+Timers survive logging out or restarting: they are restored at login, and any that finished in the meantime are notified then.
+
+
+## Development
+
+`make test` runs the tests for parsing and formatting, and `make` builds `Timer.alfredworkflow`.
